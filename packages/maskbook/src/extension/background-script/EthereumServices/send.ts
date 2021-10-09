@@ -66,6 +66,14 @@ function isSignableMethod(payload: JsonRpcPayload) {
     ].includes(payload.method as EthereumMethodType)
 }
 
+function getTransactionHashFromResponse(response?: JsonRpcResponse) {
+    if (!response) return ''
+    const hash = response?.result as string | undefined
+    if (typeof hash !== 'string') return ''
+    if (!/^0x([\dA-Fa-f]{64})$/.test(hash)) return ''
+    return hash
+}
+
 function getChainIdFromPayload(payload: JsonRpcPayload) {
     switch (payload.method) {
         // here are methods that contracts may emit
@@ -95,9 +103,8 @@ async function handleTransferTransaction(payload: JsonRpcPayload) {
 }
 
 function handleRecentTransaction(account: string, payload: JsonRpcPayload, response: JsonRpcResponse | undefined) {
-    const hash = response?.result as string | undefined
-    if (typeof hash !== 'string') return
-    if (!/^0x([\dA-Fa-f]{64})$/.test(hash)) return
+    const hash = getTransactionHashFromResponse(response)
+    if (!hash) return
     WalletRPC.addRecentTransaction(account, hash, payload)
 }
 
@@ -256,21 +263,25 @@ export async function INTERNAL_send(
             case ProviderType.MetaMask:
                 try {
                     await MetaMask.ensureConnectedAndUnlocked()
-                } catch (error: any) {
-                    callback(error)
+                    provider?.send(payload, (error, response) => {
+                        callback(error, response)
+                        handleTransferTransaction(payload)
+                        handleRecentTransaction(account, payload, response)
+                    })
+                } catch (error) {
+                    if (error instanceof Error) callback(error)
                     break
                 }
-                provider?.send(payload, (error, response) => {
-                    callback(error, response)
-                    handleTransferTransaction(payload)
-                    handleRecentTransaction(account, payload, response)
-                })
                 break
             case ProviderType.WalletConnect:
-                const response = await WalletConnect.sendCustomRequest(payload as IJsonRpcRequest)
-                callback(null, response)
-                handleTransferTransaction(payload)
-                handleRecentTransaction(account, payload, response)
+                try {
+                    const response = await WalletConnect.sendCustomRequest(payload as IJsonRpcRequest)
+                    callback(null, response)
+                    handleTransferTransaction(payload)
+                    handleRecentTransaction(account, payload, response)
+                } catch (error) {
+                    if (error instanceof Error) callback(error)
+                }
                 break
             case ProviderType.CustomNetwork:
                 throw new Error('To be implemented.')

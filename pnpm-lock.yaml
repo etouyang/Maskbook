@@ -596,6 +596,7 @@ importers:
       '@masknet/web3-shared-evm': workspace:*
       bignumber.js: ^9.0.1
       react-use: ^17.3.1
+      web3-core-helpers: 1.5.2
     dependencies:
       '@masknet/plugin-infra': link:../../plugin-infra
       '@masknet/shared': link:../../shared
@@ -603,6 +604,7 @@ importers:
       '@masknet/web3-shared-evm': link:../../web3-shared/evm
       bignumber.js: 9.0.1
       react-use: 17.3.1_f991c289939c8299bed5e4a6a5a79a62
+      web3-core-helpers: 1.5.2
 
   packages/plugins/example:
     specifiers:

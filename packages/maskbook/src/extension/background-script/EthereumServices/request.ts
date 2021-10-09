@@ -2,7 +2,7 @@ import type { RequestArguments, TransactionConfig } from 'web3-core'
 import type { JsonRpcPayload, JsonRpcResponse } from 'web3-core-helpers'
 import { INTERNAL_nativeSend, INTERNAL_send, SendOverrides } from './send'
 import { hasNativeAPI, nativeAPI } from '../../../utils/native-rpc'
-import { EthereumMethodType, ProviderType } from '@masknet/web3-shared-evm'
+import { EthereumMethodType, ProviderType, TransactionStateType } from '@masknet/web3-shared-evm'
 import {
     currentMaskWalletAccountWalletSettings,
     currentMaskWalletChainIdSettings,
@@ -78,22 +78,42 @@ export async function requestSend(
         ...payload,
         id,
     }
+    const hijackedCallback = (error: Error | null, response?: JsonRpcResponse) => {
+        if (error)
+            WalletRPC.notifyProgress({
+                payload: payload_,
+                state: {
+                    type: TransactionStateType.FAILED,
+                    error,
+                },
+            })
+        callback(error, response)
+    }
     if (
         Flags.v2_enabled &&
         isRiskMethod(payload_.method as EthereumMethodType) &&
         providerType === ProviderType.MaskWallet
     ) {
         try {
+            WalletRPC.watchProgress(payload_, {
+                type: TransactionStateType.WAIT_FOR_CONFIRMING,
+            })
             await WalletRPC.pushUnconfirmedRequest(payload_)
         } catch (error) {
-            callback(error instanceof Error ? error : new Error('Failed to add request.'))
+            if (error instanceof Error) hijackedCallback(error)
             return
         }
-        UNCONFIRMED_CALLBACK_MAP.set(payload_.id, callback)
+        UNCONFIRMED_CALLBACK_MAP.set(payload_.id, hijackedCallback)
         if (popupsWindow) openPopupWindow()
         return
     }
-    getSendMethod()(payload_, callback, overrides)
+    WalletRPC.watchProgress(payload, {
+        type:
+            providerType === ProviderType.MaskWallet
+                ? TransactionStateType.UNKNOWN
+                : TransactionStateType.WAIT_FOR_CONFIRMING,
+    })
+    getSendMethod()(payload_, hijackedCallback, overrides)
 }
 
 export async function confirmRequest(payload: JsonRpcPayload) {
