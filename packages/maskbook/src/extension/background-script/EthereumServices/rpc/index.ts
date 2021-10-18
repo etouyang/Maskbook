@@ -1,5 +1,7 @@
+import BigNumber from 'bignumber.js'
 import * as ABICoder from 'web3-eth-abi'
 import {
+    isSameAddress,
     EthereumRpcComputed,
     EthereumRpcType,
     EthereumMethodType,
@@ -117,7 +119,9 @@ export async function getComputedPayload(payload: JsonRpcPayload): Promise<Ether
 }
 
 export async function getSendTransactionComputedPayload(payload: JsonRpcPayload) {
-    const [config] = payload.params as [TransactionConfig]
+    const config = payload.method === EthereumMethodType.ETH_REPLACE_TRANSACTION ? payload.params[1] : payload.params[0]
+    const from = (config.from as string | undefined) ?? ''
+    const value = (config.value as string | undefined) ?? '0x0'
     const data = getData(config)
     const to = getTo(config)
     const signature = getFunctionSignature(config)
@@ -141,10 +145,18 @@ export async function getSendTransactionComputedPayload(payload: JsonRpcPayload)
         }
 
         // contract deployment
-        if (to === ADDRESS_ZERO) {
+        if (isSameAddress(to, ADDRESS_ZERO)) {
             return {
                 type: EthereumRpcType.CONTRACT_DEPLOYMENT,
                 code: data,
+                _tx: config,
+            }
+        }
+
+        // cancel tx
+        if (isSameAddress(from, to) && new BigNumber(value).isZero()) {
+            return {
+                type: EthereumRpcType.CANCEL,
                 _tx: config,
             }
         }
@@ -156,6 +168,14 @@ export async function getSendTransactionComputedPayload(payload: JsonRpcPayload)
             code = await getCode(to)
         } catch {
             code = ''
+        }
+
+        // cancel tx
+        if (isSameAddress(from, to) && new BigNumber(value).isZero()) {
+            return {
+                type: EthereumRpcType.CANCEL,
+                _tx: config,
+            }
         }
 
         // send ether
