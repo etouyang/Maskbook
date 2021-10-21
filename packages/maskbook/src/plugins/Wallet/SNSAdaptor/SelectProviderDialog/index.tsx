@@ -176,6 +176,8 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                     break
                 case ProviderType.CustomNetwork:
                     throw new Error('To be implemented.')
+                case ProviderType.Injected:
+                    throw new Error('To be implemented.')
                 default:
                     unreachable(providerType)
             }
@@ -228,9 +230,9 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                     </Typography>
                     <ImageList
                         className={classnames(classes.stepContent, classes.grid)}
-                        gap={16}
-                        cols={3}
-                        rowHeight={151}>
+                        gap={8}
+                        cols={4}
+                        rowHeight={130}>
                         <ImageListItem>
                             <Provider
                                 logo={<MaskIcon size={45} />}
@@ -238,7 +240,7 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                                 onClick={() => onConnectProvider(ProviderType.MaskWallet)}
                             />
                         </ImageListItem>
-                        {Flags.metamask_support_enabled ? (
+                        {Flags.metamask_enabled ? (
                             <ImageListItem>
                                 <Provider
                                     logo={<MetaMaskIcon className={classes.providerIcon} viewBox="0 0 45 45" />}
@@ -254,6 +256,16 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                                 onClick={() => onConnectProvider(ProviderType.WalletConnect)}
                             />
                         </ImageListItem>
+                        {Flags.injected_web3_enabled ? (
+                            <ImageListItem>
+                                <Provider
+                                    logo={<MetaMaskIcon className={classes.providerIcon} viewBox="0 0 45 45" />}
+                                    name="Injected Web3"
+                                    onClick={() => onConnectProvider(ProviderType.Injected)}
+                                    ButtonBaseProps={{disabled: true}}
+                                />
+                            </ImageListItem>
+                        ) : null}
                     </ImageList>
                 </Box>
             </DialogContent>

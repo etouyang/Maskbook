@@ -192,6 +192,8 @@ export async function INTERNAL_send(
                 break
             case ProviderType.CustomNetwork:
                 throw new Error('To be implemented.')
+            case ProviderType.Injected:
+                throw new Error('To be implemented.')
             default:
                 safeUnreachable(providerType)
         }
@@ -273,6 +275,8 @@ export async function INTERNAL_send(
                 handleRecentTransaction(account, payload, response)
                 break
             case ProviderType.CustomNetwork:
+                throw new Error('To be implemented.')
+            case ProviderType.Injected:
                 throw new Error('To be implemented.')
             default:
                 safeUnreachable(providerType)
