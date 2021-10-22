@@ -20,6 +20,7 @@ import { useAppearance } from '../pages/Personas/api'
 import { Web3Provider } from '@masknet/web3-shared-evm'
 import { Web3Context } from '../web3/context'
 import { PersonaContext } from '../pages/Personas/hooks/usePersonaContext'
+import { TransactionSnackbar } from './TransactionSnackbar'
 
 const PluginRender = createInjectHooksRenderer(useActivatedPluginsDashboard, (x) => x.GlobalInjection)
 
@@ -48,6 +49,7 @@ export default function DashboardRoot() {
                                         <HashRouter>
                                             <Pages />
                                         </HashRouter>
+                                        <TransactionSnackbar />
                                         <PluginRender />
                                     </CustomSnackbarProvider>
                                 </ErrorBoundary>
