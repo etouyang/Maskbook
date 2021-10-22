@@ -20,6 +20,10 @@ to {
             boxSizing: 'border-box',
             backgroundImage: `url(${new URL('./cover.png', import.meta.url)})`,
             backgroundSize: 'cover',
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                padding: theme.spacing(1, 1.5),
+                height: 202,
+            },
         },
         header: {
             display: 'flex',
@@ -45,11 +49,16 @@ to {
         },
         myStatus: {
             position: 'absolute',
-            fontSize: '14px',
-            left: '26px',
-            bottom: '20px',
+            fontSize: 14,
+            left: 26,
+            bottom: 20,
             color: '#FAD85A',
             fontWeight: 'bold',
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                fontSize: 14,
+                left: 12,
+                bottom: 8,
+            },
         },
         from: {
             position: 'absolute',
@@ -58,6 +67,11 @@ to {
             bottom: '20px',
             color: '#FFFFFF',
             fontWeight: 'bold',
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                fontSize: 14,
+                right: 12,
+                bottom: 8,
+            },
         },
         label: {
             borderRadius: theme.spacing(1),
@@ -65,8 +79,8 @@ to {
             background: 'rgba(0, 0, 0, 0.2)',
             textTransform: 'capitalize',
             position: 'absolute',
-            right: 18,
-            top: 27,
+            right: 12,
+            top: 8,
         },
         words: {
             color: '#FAD85A',
@@ -75,6 +89,9 @@ to {
             textOverflow: 'ellipsis',
             overflow: 'hidden',
             width: '85%',
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                fontSize: 14,
+            },
         },
         button: {
             color: theme.palette.common.white,
