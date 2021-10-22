@@ -1,7 +1,7 @@
 import { WalletMessages } from '@masknet/plugin-wallet'
 import { useRemoteControlledDialog } from '@masknet/shared'
 import { TransactionState, TransactionStateType, useAccount, useChainIdValid } from '@masknet/web3-shared-evm'
-import { Box } from '@mui/material'
+import { Box, Theme, useMediaQuery } from '@mui/material'
 import { useCallback } from 'react'
 import ActionButton from '../../../../extension/options-page/DashboardComponents/ActionButton'
 import { useI18N } from '../../../../utils'
@@ -28,6 +28,8 @@ export function OperationFooter({
     const { t } = useI18N()
     const account = useAccount()
     const chainIdValid = useChainIdValid()
+    const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
+    const buttonSize = isSmall ? 'small' : 'large'
 
     //#region remote controlled select provider dialog
     const { openDialog: openSelectProviderDialog } = useRemoteControlledDialog(
@@ -42,17 +44,16 @@ export function OperationFooter({
 
     const ObtainButton = () => {
         if (!canClaim && !canRefund) return null
-
         if (!account) {
             return (
-                <ActionButton variant="contained" fullWidth size="large" onClick={openSelectProviderDialog}>
+                <ActionButton variant="contained" fullWidth size={buttonSize} onClick={openSelectProviderDialog}>
                     {t('plugin_wallet_connect_a_wallet')}
                 </ActionButton>
             )
         }
         if (!chainIdValid) {
             return (
-                <ActionButton disabled variant="contained" fullWidth size="large">
+                <ActionButton disabled variant="contained" fullWidth size={buttonSize}>
                     {t('plugin_wallet_invalid_network')}
                 </ActionButton>
             )
@@ -64,7 +65,7 @@ export function OperationFooter({
                     claimState.type === TransactionStateType.HASH || refundState.type === TransactionStateType.HASH
                 }
                 variant="contained"
-                size="large"
+                size={buttonSize}
                 onClick={onClaimOrRefund}>
                 {canClaim
                     ? claimState.type === TransactionStateType.HASH

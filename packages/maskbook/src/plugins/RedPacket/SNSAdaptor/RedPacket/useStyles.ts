@@ -46,6 +46,10 @@ to {
             '& button': {
                 flexBasis: 'auto',
             },
+            [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+                flexDirection: 'column',
+                gap: theme.spacing(1),
+            },
         },
         myStatus: {
             position: 'absolute',
