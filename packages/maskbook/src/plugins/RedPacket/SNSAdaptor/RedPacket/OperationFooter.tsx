@@ -84,7 +84,7 @@ export function OperationFooter({
                 connectWallet: classes.connectWallet,
             }}>
             <Box className={classes.footer}>
-                <ActionButton variant="contained" fullWidth onClick={handleShare}>
+                <ActionButton variant="contained" fullWidth size={buttonSize} onClick={handleShare}>
                     {t('share')}
                 </ActionButton>
                 <ObtainButton />

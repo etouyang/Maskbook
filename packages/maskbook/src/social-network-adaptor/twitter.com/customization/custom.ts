@@ -54,6 +54,7 @@ export function useThemeTwitterVariant() {
 
         const TwitterTheme = produce(MaskTheme, (theme) => {
             theme.palette.background.paper = backgroundColor
+            const isSmall = theme.breakpoints.down('sm')
             const isDark = theme.palette.mode === 'dark'
             const isDarker = backgroundColor === 'rgb(0,0,0)'
             theme.palette.primary = {
@@ -73,7 +74,7 @@ export function useThemeTwitterVariant() {
             theme.components = theme.components || {}
             theme.components.MuiButton = {
                 defaultProps: {
-                    size: 'medium',
+                    size: isSmall ? 'small' : 'medium',
                     disableElevation: true,
                 },
                 styleOverrides: {
