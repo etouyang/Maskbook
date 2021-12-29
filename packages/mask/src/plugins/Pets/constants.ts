@@ -1,6 +1,7 @@
 export const PetsPluginID = 'com.maskbook.pets'
 export const TWITTER = 'twitter.com'
 export const DEFAULT_WORD = 'Hello Mask'
+export const Share_Twitter = 'https://twitter.com/etouyang/status/1475712684322537473?s=20'
 export const PetCollections = [
     {
         name: 'MIRROR',
