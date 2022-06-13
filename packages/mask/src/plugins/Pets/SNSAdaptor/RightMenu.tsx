@@ -98,6 +98,12 @@ const useStyles = makeStyles()(() => ({
     },
 }))
 
+const urls = [
+    'https://www.shadertoy.com/embed/ltffzl?gui=true&t=10&paused=false&muted=false',
+    'https://www.shadertoy.com/embed/tt3GRN?gui=true&t=10&paused=false&muted=false',
+    'https://www.shadertoy.com/embed/Ndc3zl?gui=true&t=10&paused=false&muted=false',
+]
+
 function RightMenu(props: Props) {
     const { classes } = useStyles()
     const refMenuDom = useRef<HTMLDivElement>(null)
@@ -137,6 +143,8 @@ function RightMenu(props: Props) {
         props.onClose()
     }, [props.dragPosition.x, props.dragPosition.y])
 
+    const [urlsIndex, setIndex] = useState(0)
+
     function onClickMenu(type: string) {
         switch (type) {
             case 'change':
@@ -148,6 +156,30 @@ function RightMenu(props: Props) {
             case 'aboutUs':
                 window.open('https://twitter.com/NonFFriend')
                 break
+            case 'tiktok':
+                const dom = document.querySelector('main a .css-1dbjc4n .css-1dbjc4n')
+                if (dom) {
+                    setIndex((prev) => {
+                        const next = prev === urls.length - 1 ? 0 : prev + 1
+                        return next
+                    })
+                    let iframe: HTMLIFrameElement = document.getElementById('mask_iframe') as HTMLIFrameElement
+                    if (!iframe) {
+                        iframe = document.createElement('iframe')
+                        iframe.id = 'mask_iframe'
+                    }
+
+                    iframe.style.cssText = 'width: 100%;height:100%;display:block;background-color: #222'
+                    iframe.src = urls[urlsIndex]
+                    iframe.allowFullscreen = true
+
+                    dom.appendChild(iframe)
+
+                    // ;(dom as HTMLDivElement).style.setProperty(
+                    //     'background-image',
+                    //     `url(https://api.neweb.top/bing.php?time=${Date.now()})`,
+                    // )
+                }
         }
         props.onClose()
     }
@@ -178,6 +210,9 @@ function RightMenu(props: Props) {
             </div>
             <div onClick={() => onClickMenu('aboutUs')}>
                 <span>About us</span>
+            </div>
+            <div onClick={() => onClickMenu('tiktok')}>
+                <span>Show next</span>
             </div>
         </div>
     )
