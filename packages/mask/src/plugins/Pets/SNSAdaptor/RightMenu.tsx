@@ -174,11 +174,6 @@ function RightMenu(props: Props) {
                     iframe.allowFullscreen = true
 
                     dom.appendChild(iframe)
-
-                    // ;(dom as HTMLDivElement).style.setProperty(
-                    //     'background-image',
-                    //     `url(https://api.neweb.top/bing.php?time=${Date.now()})`,
-                    // )
                 }
         }
         props.onClose()
@@ -205,9 +200,12 @@ function RightMenu(props: Props) {
             <div onClick={() => onClickMenu('change')}>
                 <span>Change</span>
             </div>
-            <div onClick={() => onClickMenu('ski')}>
-                <span>Ski</span>
-            </div>
+            {location.pathname === '/home' ? (
+                <div onClick={() => onClickMenu('ski')}>
+                    <span>Ski</span>
+                </div>
+            ) : null}
+
             <div onClick={() => onClickMenu('aboutUs')}>
                 <span>About us</span>
             </div>

@@ -7,6 +7,7 @@ import { InjectedDialog } from '@masknet/shared'
 import { WalletStatusBox } from '../../../components/shared/WalletStatusBox'
 import GameList from './GameList'
 import GameWindow from './GameWindow'
+import GameShareDialog from './GameShareDialog'
 
 import { WalletMessages } from '../../Wallet/messages'
 import type { GameInfo } from '../types'
@@ -33,15 +34,33 @@ const WalletConnectDialog = () => {
         WalletMessages.events.walletStatusDialogUpdated,
     )
 
+    const [isShareShow, setShareShow] = useState(false)
+    const [shareUrl, setShareUrl] = useState('')
+    const handleGameShare = (gameInfo: GameInfo) => {
+        setShareShow(true)
+        setShareUrl(gameInfo.url)
+    }
+    const closeGameShare = () => {
+        setShareShow(false)
+        setShareUrl('')
+    }
+
     return (
         <>
             <InjectedDialog onClose={closeDialog} open={open} title="Game">
                 <DialogContent>
                     <WalletStatusBox />
-                    <GameList onPlay={handleGameOpen} />
+                    <GameList onPlay={handleGameOpen} onShare={handleGameShare} />
                 </DialogContent>
             </InjectedDialog>
             <GameWindow gameInfo={gameInfo} isShow={isGameShow} onClose={handleGameClose} />
+            <InjectedDialog onClose={closeGameShare} open={isShareShow} title="Share">
+                <DialogContent>
+                    <GameShareDialog shareUrl={shareUrl} onClose={closeGameShare} />
+                </DialogContent>
+            </InjectedDialog>
+
+            {/* {!!isShareShow && <GameShareDialog shareUrl={shareUrl} onClose={closeGameShare} />} */}
         </>
     )
 }
