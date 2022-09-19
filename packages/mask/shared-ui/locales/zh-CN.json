@@ -160,6 +160,13 @@
     "plugin_avatar_web3_error": "错误",
     "plugin_avatar_chain_error": "网络不匹配。",
     "plugin_avatar_input_token_address": "输入合约地址",
+    "plugin_background_setup_share_title": "NFT 背景",
+    "plugin_background_setup_pfp_share": "我刚刚使用了 Mask 插件免费设置好我的 NFT 头像！ 快快下载功能强大的 Mask.io ，在 Twitter 上浏览别人独特的 NFT 和Web3 活动吧！",
+    "plugin_background_setup_success": "NFT 头像设置成功。",
+    "plugin_background_asset": "找不到任何资产。",
+    "plugin_background_web3_error": "错误",
+    "plugin_background_chain_error": "网络不匹配。",
+    "plugin_background_input_token_address": "输入合约地址",
     "mask_network": "Mask Network",
     "import": "导入",
     "no_search_result": "没有任何结果。",
@@ -877,5 +884,6 @@
     "nft_avatar": "NFT 头像",
     "web3_tab_hint": "未发现任何地址。",
     "nft_button_set_avatar": "设置 NFT 头像",
+    "nft_button_set_background": "设置 NFT 背景",
     "popups_wallet_unsupported_network": "不支持的网络类型"
 }

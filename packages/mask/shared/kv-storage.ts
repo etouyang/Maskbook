@@ -42,6 +42,7 @@ export const PersistentStorages = {
                 [PluginId.MaskBox]: false,
                 [PluginId.Savings]: false,
                 [PluginId.Avatar]: false,
+                [PluginId.Background]: false,
                 [PluginId.Trader]: false,
                 [PluginId.Tips]: false,
                 [PluginId.Transak]: false,

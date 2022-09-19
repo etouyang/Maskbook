@@ -402,7 +402,11 @@ export function NFTListDialog(props: NFTListDialogProps) {
                     onChange={onChangeWallet}
                     expectedAddress={selectedAccount}>
                     <Button onClick={onSave} disabled={disabled} fullWidth>
-                        {pfpType === PFP_TYPE.PFP ? t.set_PFP_title() : t.set_pfp_background_title()}
+                        {pfpType === PFP_TYPE.PFP
+                            ? t.set_PFP_title()
+                            : pfpType === PFP_TYPE.BACKGROUND
+                            ? t.set_pfp_background_title()
+                            : t.set_pfp_background_title()}
                     </Button>
                 </PluginVerifiedWalletStatusBar>
             </DialogActions>

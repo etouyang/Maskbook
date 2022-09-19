@@ -183,6 +183,7 @@ export class TwitterAPI implements TwitterBaseAPI.Provider {
             headers,
         })
     }
+
     async updateProfileImage(screenName: string, media_id_str: string): Promise<TwitterBaseAPI.AvatarInfo | undefined> {
         const { bearerToken, queryToken, csrfToken } = await getTokens()
         const headers = {
@@ -194,6 +195,44 @@ export class TwitterAPI implements TwitterBaseAPI.Provider {
             referer: `https://twitter.com/${screenName}`,
         }
         const updateProfileImageURL = 'https://twitter.com/i/api/1.1/account/update_profile_image.json'
+        if (!bearerToken || !queryToken || !csrfToken) return
+
+        const response = await globalThis.fetch(
+            urlcat(updateProfileImageURL, {
+                media_id: media_id_str,
+                skip_status: 1,
+                return_user: true,
+            }),
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers,
+            },
+        )
+
+        const updateInfo = await response.json()
+        return {
+            imageUrl: updateInfo.profile_image_url_https,
+            mediaId: updateInfo.id_str,
+            nickname: updateInfo.name,
+            userId: updateInfo.screen_name,
+        }
+    }
+
+    async updateProfileBanner(
+        screenName: string,
+        media_id_str: string,
+    ): Promise<TwitterBaseAPI.AvatarInfo | undefined> {
+        const { bearerToken, queryToken, csrfToken } = await getTokens()
+        const headers = {
+            authorization: `Bearer ${bearerToken}`,
+            'x-csrf-token': csrfToken,
+            'content-type': 'application/json',
+            'x-twitter-auth-type': 'OAuth2Session',
+            'x-twitter-active-user': 'yes',
+            referer: `https://twitter.com/${screenName}`,
+        }
+        const updateProfileImageURL = 'https://twitter.com/i/api/1.1/account/update_profile_banner.json'
         if (!bearerToken || !queryToken || !csrfToken) return
 
         const response = await globalThis.fetch(
